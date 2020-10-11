@@ -1,35 +1,40 @@
 package org.calculator;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class InputParameters {
-    private boolean multiCharacterDelimiter;
-    private String delimiter;
+    private final boolean hasCustomDelimiter;
+    private List<String> delimiters;
     private String numbers;
 
-    public InputParameters(String delimiter, String numbers, boolean multiCharacterDelimiter) {
-        this.multiCharacterDelimiter = multiCharacterDelimiter;
-        this.delimiter = delimiter;
+    public InputParameters(List<String> delimiters, String numbers, boolean hasCustomDelimiter) {
+        this.delimiters = delimiters;
         this.numbers = numbers;
+        this.hasCustomDelimiter = hasCustomDelimiter;
     }
 
     public static InputParameters from(String inputString) {
-        String delimiter = ",\n";
+        List<String> delimeters = Arrays.asList(",\n");
         String numbers = inputString;
-        boolean multiCharacterDelimiter = false;
+        boolean hasCustomDelimiter = false;
 
         if (inputString.startsWith("//")) {
             String[] tokens = inputString.split("\n", 2);
 
             if (inputString.startsWith("//[")) {
-                multiCharacterDelimiter = true;
-                delimiter = tokens[0].substring(3, tokens[0].length() - 1);
+                hasCustomDelimiter = true;
+                String delimiterString = tokens[0].substring(3, tokens[0].length() - 1);
+                delimeters = Arrays.asList(delimiterString.split("\\Q][\\E"));
             } else  {
-                delimiter = tokens[0].substring(2);
+                delimeters = Arrays.asList(tokens[0].substring(2));
             }
 
             numbers = tokens[1];
         }
 
-        return new InputParameters(delimiter, numbers, multiCharacterDelimiter);
+        return new InputParameters(delimeters, numbers, hasCustomDelimiter);
     }
 
     public String numberString() {
@@ -37,6 +42,12 @@ public class InputParameters {
     }
 
     public String delimiterRegex() {
-        return String.format(multiCharacterDelimiter ? "\\Q%s\\E" : "[%s]", delimiter);
+        if (hasCustomDelimiter) {
+            return delimiters
+                    .stream()
+                    .map(del -> String.format("\\Q%s\\E", del))
+                    .collect(Collectors.joining("|"));
+        }
+        return String.format("[%s]", delimiters.get(0));
     }
 }

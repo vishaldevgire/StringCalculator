@@ -92,4 +92,11 @@ public class StringCalculatorTest {
         assertThat(calc.Add("//[***]\n22***33***55***66"), is(176L));
         assertThat(calc.Add("//[++]\n22++33++55"), is(110L));
     }
+
+    @Test
+    public void Add_shouldReturnCorrectSumWithMultipleCustomDelimiters() {
+        StringCalculator calc = new StringCalculator();
+
+        assertThat(calc.Add("//[***][++][&]\n22***33++55***66&12"), is(188L));
+    }
 }
