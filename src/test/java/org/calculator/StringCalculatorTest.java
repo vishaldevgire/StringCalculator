@@ -85,5 +85,4 @@ public class StringCalculatorTest {
         assertThat(calc.Add("22000,11,1000,22,33,1001,4000"), is(1066L));
         assertThat(calc.Add("//;\n1;1001;2;12000;11000;3"), is(6L));
     }
-
 }

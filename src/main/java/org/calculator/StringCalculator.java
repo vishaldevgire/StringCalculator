@@ -1,5 +1,7 @@
 package org.calculator;
 
+import org.calculator.util.Pair;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +17,28 @@ public class StringCalculator {
             return 0L;
         }
 
+        Pair<String, String> parameters = parseInput(numbers);
+        String delimiter = parameters.first();
+        String input = parameters.second();
+
+        validateInput(delimiter, input);
+
+        return inputStream(delimiter, input).sum();
+    }
+
+    private void validateInput(String delimiter, String input) {
+        List<Long> negativeNumbers = inputStream(delimiter, input).filter(number -> number < 0)
+                .boxed()
+                .collect(Collectors.toList());
+
+        if (!negativeNumbers.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("negatives not allowed: %s", negativeNumbers)
+            );
+        }
+    }
+
+    private Pair<String, String> parseInput(String numbers) {
         String delimiter = ",\n";
         String input = numbers;
 
@@ -24,14 +48,7 @@ public class StringCalculator {
             input = tokens[1];
         }
 
-        List<Long> negativeNumbers = inputStream(delimiter, input).filter(number -> number < 0).boxed().collect(Collectors.toList());
-        if (!negativeNumbers.isEmpty()) {
-            throw new IllegalArgumentException(
-                    String.format("negatives not allowed: %s", negativeNumbers)
-            );
-        }
-
-        return inputStream(delimiter, input).sum();
+        return Pair.of(delimiter, input);
     }
 
     private LongStream inputStream(String delimiter, String input) {
