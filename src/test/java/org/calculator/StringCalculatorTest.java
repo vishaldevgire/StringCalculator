@@ -52,10 +52,10 @@ public class StringCalculatorTest {
     public void Add_shouldThrowErrorWhenInputContainsNegativeNumbers() {
         StringCalculator calc = new StringCalculator();
 
-        Throwable error1 = assertThrows(IllegalArgumentException.class, () -> calc.Add("23,-23,33"));
-        assertThat(error1.getMessage(), is("negatives not allowed"));
+        Throwable error1 = assertThrows(IllegalArgumentException.class, () -> calc.Add("23,-23,-11,33"));
+        assertThat(error1.getMessage(), is("negatives not allowed: [-23, -11]"));
 
         Throwable error2 = assertThrows(IllegalArgumentException.class, () -> calc.Add("//;\n22;-33;55;66"));
-        assertThat(error2.getMessage(), is("negatives not allowed"));
+        assertThat(error2.getMessage(), is("negatives not allowed: [-33]"));
     }
 }

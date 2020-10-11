@@ -1,10 +1,16 @@
 package org.calculator;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class StringCalculator {
     public long Add(String numbers) {
+        if (numbers.isEmpty()) {
+            return 0L;
+        }
+
         String delimiter = ",\n";
         String input = numbers;
 
@@ -14,11 +20,14 @@ public class StringCalculator {
             input = tokens[1];
         }
 
-        if (inputStream(delimiter, input).filter(number -> number < 0).findAny().isPresent()) {
-            throw new IllegalArgumentException("negatives not allowed");
+        List<Long> negativeNumbers = inputStream(delimiter, input).filter(number -> number < 0).boxed().collect(Collectors.toList());
+        if (!negativeNumbers.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("negatives not allowed: %s", negativeNumbers)
+            );
         }
 
-        return numbers.isEmpty() ? 0L : inputStream(delimiter, input).sum();
+        return inputStream(delimiter, input).sum();
     }
 
     private LongStream inputStream(String delimiter, String input) {
