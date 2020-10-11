@@ -37,7 +37,7 @@ public class StringCalculator {
 
     private LongStream inputStream(InputParameters parameters) {
         return Arrays
-                .stream(parameters.numberString().split(String.format("[%s]", parameters.delimiter())))
+                .stream(parameters.numberString().split(parameters.delimiterRegex()))
                 .mapToLong(Long::parseLong)
                 .filter(number -> number < 1001);
     }
