@@ -58,4 +58,21 @@ public class StringCalculatorTest {
         Throwable error2 = assertThrows(IllegalArgumentException.class, () -> calc.Add("//;\n22;-33;55;66"));
         assertThat(error2.getMessage(), is("negatives not allowed: [-33]"));
     }
+
+    @Test
+    public void GetCalledCount_shouldReturnNumberOfTimesAddWasCalled() {
+        StringCalculator calc = new StringCalculator();
+
+        assertThat(calc.GetCalledCount(), is(0));
+
+        calc.Add("//;\n22;33;55;66");
+
+        assertThat(calc.GetCalledCount(), is(1));
+
+        calc.Add("//-\n22-33-55");
+        calc.Add("//.\n33.55");
+
+        assertThat(calc.GetCalledCount(), is(3));
+    }
+
 }

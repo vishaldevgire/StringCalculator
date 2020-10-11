@@ -6,7 +6,11 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class StringCalculator {
+    private Integer numberOfTimesAddCalled = 0;
+
     public long Add(String numbers) {
+        numberOfTimesAddCalled += 1;
+
         if (numbers.isEmpty()) {
             return 0L;
         }
@@ -34,5 +38,9 @@ public class StringCalculator {
         return Arrays
                 .stream(input.split(String.format("[%s]", delimiter)))
                 .mapToLong(Long::parseLong);
+    }
+
+    public Integer GetCalledCount() {
+        return numberOfTimesAddCalled;
     }
 }
