@@ -27,4 +27,11 @@ public class StringCalculatorTest {
 
         assertThat(calc.Add("11,22,33"), is(66L));
     }
+
+    @Test
+    public void Add_shouldReturnCorrectSumWhenInputIsSeparatedByNewLineCharacters() {
+        StringCalculator calc = new StringCalculator();
+
+        assertThat(calc.Add("11\n22,33\n55\n66"), is(187L));
+    }
 }
