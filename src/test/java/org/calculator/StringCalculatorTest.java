@@ -34,4 +34,13 @@ public class StringCalculatorTest {
 
         assertThat(calc.Add("11\n22,33\n55\n66"), is(187L));
     }
+
+    @Test
+    public void Add_shouldReturnCorrectSumWithCustomDelimiter() {
+        StringCalculator calc = new StringCalculator();
+
+        assertThat(calc.Add("//;\n22;33;55;66"), is(176L));
+        assertThat(calc.Add("//-\n22-33-55"), is(110L));
+        assertThat(calc.Add("//.\n33.55"), is(88L));
+    }
 }
