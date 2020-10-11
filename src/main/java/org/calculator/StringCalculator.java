@@ -37,7 +37,8 @@ public class StringCalculator {
     private LongStream inputStream(String delimiter, String input) {
         return Arrays
                 .stream(input.split(String.format("[%s]", delimiter)))
-                .mapToLong(Long::parseLong);
+                .mapToLong(Long::parseLong)
+                .filter(number -> number < 1001);
     }
 
     public Integer GetCalledCount() {

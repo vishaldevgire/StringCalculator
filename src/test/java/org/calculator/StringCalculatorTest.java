@@ -75,4 +75,15 @@ public class StringCalculatorTest {
         assertThat(calc.GetCalledCount(), is(3));
     }
 
+    @Test
+    public void Add_shouldIgnoreNumbersGreaterThan1000() {
+        StringCalculator calc = new StringCalculator();
+
+        assertThat(calc.Add("11000"), is(0L));
+        assertThat(calc.Add("22000,1001,110000"), is(0L));
+
+        assertThat(calc.Add("22000,11,1000,22,33,1001,4000"), is(1066L));
+        assertThat(calc.Add("//;\n1;1001;2;12000;11000;3"), is(6L));
+    }
+
 }
