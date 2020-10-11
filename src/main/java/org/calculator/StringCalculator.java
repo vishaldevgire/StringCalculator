@@ -1,7 +1,5 @@
 package org.calculator;
 
-import org.calculator.util.Pair;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,17 +15,16 @@ public class StringCalculator {
             return 0L;
         }
 
-        Pair<String, String> parameters = parseInput(numbers);
-        String delimiter = parameters.first();
-        String input = parameters.second();
+        InputParameters parameters = InputParameters.from(numbers);
 
-        validateInput(delimiter, input);
+        validateInput(parameters);
 
-        return inputStream(delimiter, input).sum();
+        return inputStream(parameters).sum();
     }
 
-    private void validateInput(String delimiter, String input) {
-        List<Long> negativeNumbers = inputStream(delimiter, input).filter(number -> number < 0)
+    private void validateInput(InputParameters parameters) {
+        List<Long> negativeNumbers = inputStream(parameters)
+                .filter(number -> number < 0)
                 .boxed()
                 .collect(Collectors.toList());
 
@@ -38,22 +35,9 @@ public class StringCalculator {
         }
     }
 
-    private Pair<String, String> parseInput(String numbers) {
-        String delimiter = ",\n";
-        String input = numbers;
-
-        if (numbers.startsWith("//")) {
-            String[] tokens = numbers.split("\n", 2);
-            delimiter = tokens[0].substring(2);
-            input = tokens[1];
-        }
-
-        return Pair.of(delimiter, input);
-    }
-
-    private LongStream inputStream(String delimiter, String input) {
+    private LongStream inputStream(InputParameters parameters) {
         return Arrays
-                .stream(input.split(String.format("[%s]", delimiter)))
+                .stream(parameters.numberString().split(String.format("[%s]", parameters.delimiter())))
                 .mapToLong(Long::parseLong)
                 .filter(number -> number < 1001);
     }
