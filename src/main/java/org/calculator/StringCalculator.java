@@ -1,6 +1,7 @@
 package org.calculator;
 
 import java.util.Arrays;
+import java.util.stream.LongStream;
 
 public class StringCalculator {
     public long Add(String numbers) {
@@ -13,9 +14,16 @@ public class StringCalculator {
             input = tokens[1];
         }
 
-        return numbers.isEmpty() ? 0L : Arrays
+        if (inputStream(delimiter, input).filter(number -> number < 0).findAny().isPresent()) {
+            throw new IllegalArgumentException("negatives not allowed");
+        }
+
+        return numbers.isEmpty() ? 0L : inputStream(delimiter, input).sum();
+    }
+
+    private LongStream inputStream(String delimiter, String input) {
+        return Arrays
                 .stream(input.split(String.format("[%s]", delimiter)))
-                .mapToLong(Long::parseLong)
-                .sum();
+                .mapToLong(Long::parseLong);
     }
 }

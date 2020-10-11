@@ -1,10 +1,12 @@
 package org.calculator;
 
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class StringCalculatorTest {
@@ -44,5 +46,16 @@ public class StringCalculatorTest {
         assertThat(calc.Add("//;\n22;33;55;66"), is(176L));
         assertThat(calc.Add("//-\n22-33-55"), is(110L));
         assertThat(calc.Add("//.\n33.55"), is(88L));
+    }
+
+    @Test
+    public void Add_shouldThrowErrorWhenInputContainsNegativeNumbers() {
+        StringCalculator calc = new StringCalculator();
+
+        Throwable error1 = assertThrows(IllegalArgumentException.class, () -> calc.Add("23,-23,33"));
+        assertThat(error1.getMessage(), is("negatives not allowed"));
+
+        Throwable error2 = assertThrows(IllegalArgumentException.class, () -> calc.Add("//;\n22;-33;55;66"));
+        assertThat(error2.getMessage(), is("negatives not allowed"));
     }
 }
